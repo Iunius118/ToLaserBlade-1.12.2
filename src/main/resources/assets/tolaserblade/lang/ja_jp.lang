@@ -1,0 +1,20 @@
+﻿
+item.tolaserblade.laser_blade.name=レーザーブレイド
+item.tolaserblade.lasar_blade.name=レーザーブレ一ド
+
+tolaserblade.message.update=%s の新しいバージョンが利用可能です
+
+tolaserblade.configgui.category.commonConfig.tooltip=tolaserblade.cfgに含まれる設定項目を設定することができる。マルチプレイ中はサーバー側の設定が適用される。
+tolaserblade.configgui.category.commonConfig=共通の設定
+tolaserblade.configgui.category.clientConfig.tooltip=tolaserblade.cfgの設定項目のうちクライアント側に関する項目を設定する。
+tolaserblade.configgui.category.clientConfig=クライアント側の設定
+
+tolaserblade.configgui.enableBlockingWithLaserBlade.tooltip=レーザーブレイドによる防御を有効にするかどうか（trueで有効）。
+tolaserblade.configgui.enableBlockingWithLaserBlade=レーザーブレイドによる防御を有効にする
+tolaserblade.configgui.laserBladeEfficiency.tooltip=レーザーブレイドの採掘速度を整数値で指定する。
+tolaserblade.configgui.laserBladeEfficiency=レーザーブレイドの採掘速度
+
+tolaserblade.configgui.enableLaserBlade3DModel.tooltip=レーザーブレイドを3Dモデルで描画するかどうか（trueで有効）。
+tolaserblade.configgui.enableLaserBlade3DModel=レーザーブレイドを3Dモデルで描画する
+tolaserblade.configgui.laserBladeRenderingMode.tooltip=レーザーブレイドの刃の描画モードを選択する (0: 従来通り描画, 1: 加算・減算合成を使用しない描画)。「レーザーブレイドを3Dモデルで描画する」がtrueのときのみ有効。
+tolaserblade.configgui.laserBladeRenderingMode=レーザーブレイドの描画モード

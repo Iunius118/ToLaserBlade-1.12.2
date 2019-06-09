@@ -1,0 +1,8 @@
+{
+  "recipes": {
+    "laser_blade_class_1": "com.github.iunius118.tolaserblade.recipe.RecipeLaserBladeClass1$Factory",
+    "laser_blade_class_2": "com.github.iunius118.tolaserblade.recipe.RecipeLaserBladeClass2$Factory",
+    "laser_blade_class_3": "com.github.iunius118.tolaserblade.recipe.RecipeLaserBladeClass3$Factory",
+    "laser_blade_dyeing": "com.github.iunius118.tolaserblade.recipe.RecipeLaserBladeDyeing$Factory"
+  }
+}

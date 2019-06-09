@@ -1,0 +1,16 @@
+[
+{
+  "modid": "tolaserblade",
+  "name": "ToLaserBlade",
+  "description": "Adds a Laser Blade.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Iunius118/ToLaserBlade",
+  "updateUrl": "",
+  "authorList": ["Iunius118"],
+  "credits": "",
+  "logoFile": "tolaserblade_logo.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

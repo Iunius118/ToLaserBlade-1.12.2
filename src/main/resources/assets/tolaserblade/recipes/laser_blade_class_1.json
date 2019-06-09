@@ -1,0 +1,30 @@
+{
+  "type": "tolaserblade:laser_blade_class_1",
+  "group": "tolaserblade",
+  "pattern": [
+    " id",
+    "iSi",
+    "ri "
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "d": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "r": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    }
+  },
+  "result": {
+    "item": "tolaserblade:laser_blade"
+  }
+}
