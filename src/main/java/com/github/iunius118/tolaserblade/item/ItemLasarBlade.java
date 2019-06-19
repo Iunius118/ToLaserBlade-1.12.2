@@ -60,7 +60,7 @@ public class ItemLasarBlade extends ItemSword {
                 // Collect a Redstone Torch
                 if (!player.inventory.addItemStackToInventory(new ItemStack(Blocks.REDSTONE_TORCH))) {
                     // Cannot collect because player's inventory is full
-                    return EnumActionResult.FAIL;
+                    return EnumActionResult.PASS;
                 }
             }
 
@@ -77,14 +77,14 @@ public class ItemLasarBlade extends ItemSword {
 
         if (!player.capabilities.isCreativeMode && itemstack.getItemDamage() >= costDamage) {
             // This is too damaged to place Redstone Torch
-            return EnumActionResult.FAIL;
+            return EnumActionResult.PASS;
         }
 
         if (!block.isReplaceable(worldIn, pos)) {
             pos = pos.offset(facing);
         }
 
-        if (player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(Blocks.REDSTONE_TORCH, pos, false, facing, null)) {
+        if (player.isSneaking() && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(Blocks.REDSTONE_TORCH, pos, false, facing, null)) {
             int i = this.getMetadata(itemstack.getMetadata());
             IBlockState iblockstate1 = Blocks.REDSTONE_TORCH.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, player, hand);
 
@@ -98,7 +98,7 @@ public class ItemLasarBlade extends ItemSword {
 
             return EnumActionResult.SUCCESS;
         } else {
-            return EnumActionResult.FAIL;
+            return EnumActionResult.PASS;
         }
     }
 
