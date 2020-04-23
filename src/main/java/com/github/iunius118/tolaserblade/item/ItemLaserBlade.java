@@ -330,7 +330,18 @@ public class ItemLaserBlade extends ItemSword {
             // With block
             Block block = ((ItemBlock)right.getItem()).getBlock();
 
-            if (block == Blocks.DIAMOND_BLOCK) {
+            if (block == Blocks.REDSTONE_BLOCK) {
+                // Increase attack speed
+                if (upgradeClass3Speed(output)) {
+                    changeDisplayNameOnAnvil(left, output, name);
+
+                    event.setCost(COST_LVL_CLASS_3_5);
+                    event.setMaterialCost(COST_ITEM_CLASS_4);
+                    event.setOutput(output);
+
+                    return;
+                }
+            } else if (block == Blocks.DIAMOND_BLOCK) {
                 // Increase attack damage
                 if (upgradeClass3Attack(output)) {
                     changeDisplayNameOnAnvil(left, output, name);
@@ -397,6 +408,25 @@ public class ItemLaserBlade extends ItemSword {
                 output.setStackDisplayName(name);
             }
         }
+    }
+
+    public boolean upgradeClass3Speed(ItemStack stack) {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt == null) {
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        }
+
+        float spd = nbt.getFloat(KEY_SPD);
+
+        if (spd < MOD_SPD_CLASS_3) {
+            // Upgrade attack speed
+            nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean upgradeClass3Attack(ItemStack stack) {
