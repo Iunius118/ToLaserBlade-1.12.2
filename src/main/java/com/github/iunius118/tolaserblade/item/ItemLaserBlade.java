@@ -2,7 +2,9 @@ package com.github.iunius118.tolaserblade.item;
 
 import com.github.iunius118.tolaserblade.ToLaserBlade;
 import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -13,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
@@ -46,7 +49,6 @@ public class ItemLaserBlade extends ItemSword {
     public final static int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202, 0xFFA00080};
 
     public final Enchantment enchSmite;
-    public final Enchantment enchSweeping;
 
     public static final String KEY_ATK = "ATK";
     public static final String KEY_SPD = "SPD";
@@ -64,9 +66,9 @@ public class ItemLaserBlade extends ItemSword {
 
     public static final int LVL_SMITE_CLASS_3 = 5;
     public static final int LVL_SMITE_CLASS_4 = 10;
-    public static final int LVL_SWEEPING_CLASS_4 = 3;
 
-    public static final int COST_LVL_CLASS_4 = 20;
+    public static final int COST_LVL_CLASS_3_5 = 10;
+    public static final int COST_LVL_CLASS_4 = 15;
     public static final int COST_ITEM_CLASS_4 = 1;
 
     private static final IItemPropertyGetter BLOCKING_GETTER = (stack, world, entity) -> {
@@ -83,7 +85,6 @@ public class ItemLaserBlade extends ItemSword {
         attackSpeed = -1.2F;
 
         enchSmite = Enchantment.getEnchantmentByLocation("smite");
-        enchSweeping = Enchantment.getEnchantmentByLocation("sweeping");
 
         addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
     }
@@ -294,7 +295,7 @@ public class ItemLaserBlade extends ItemSword {
             String name = output.getDisplayName();
 
             // Use GIFT code
-            if ("GIFT".equals(name) || "おたから".equals(name)) {
+            if ("GIFT".equals(name) || "\u304A\u305F\u304B\u3089".equals(name)) {
                 setPerformanceClass3(output, colors[1]);
                 output.clearCustomName();
             }
@@ -313,20 +314,47 @@ public class ItemLaserBlade extends ItemSword {
 
         ItemStack output = left.copy();
 
-        // Upgrade to Class 4
+        // Upgrade
         if (right.getItem() == Items.NETHER_STAR) {
+            // Upgrade to Class 4
             if (upgradeClass4(output)) {
                 changeDisplayNameOnAnvil(left, output, name);
 
                 event.setCost(COST_LVL_CLASS_4);
                 event.setMaterialCost(COST_ITEM_CLASS_4);
                 event.setOutput(output);
-            }
 
-            return;
-        }
-        // Increase Attack point
-        else if (right.getItem() == Items.SKULL) {
+                return;
+            }
+        } else if (right.getItem() instanceof ItemBlock) {
+            // With block
+            Block block = ((ItemBlock)right.getItem()).getBlock();
+
+            if (block == Blocks.DIAMOND_BLOCK) {
+                // Increase attack damage
+                if (upgradeClass3Attack(output)) {
+                    changeDisplayNameOnAnvil(left, output, name);
+
+                    event.setCost(COST_LVL_CLASS_3_5);
+                    event.setMaterialCost(COST_ITEM_CLASS_4);
+                    event.setOutput(output);
+
+                    return;
+                }
+            } else if (block == Blocks.GLOWSTONE) {
+                // Increase Smite
+                if (upgradeClass3Smite(output)) {
+                    changeDisplayNameOnAnvil(left, output, name);
+
+                    event.setCost(COST_LVL_CLASS_3_5);
+                    event.setMaterialCost(COST_ITEM_CLASS_4);
+                    event.setOutput(output);
+
+                    return;
+                }
+            }
+        } else if (right.getItem() == Items.SKULL) {
+            // Increase attack damage
             NBTTagCompound nbt = output.getTagCompound();
             if (nbt != null) {
                 // Only Class 4 blade
@@ -344,8 +372,10 @@ public class ItemLaserBlade extends ItemSword {
                 }
             }
         }
-        // Change blade colors
-        else if (changeBladeColorByItem(output.getTagCompound(), right)) {
+
+        // Color
+        if (changeBladeColorByItem(output.getTagCompound(), right)) {
+            // Change blade colors
             changeDisplayNameOnAnvil(left, output, name);
 
             event.setCost(1);
@@ -369,13 +399,57 @@ public class ItemLaserBlade extends ItemSword {
         }
     }
 
+    public boolean upgradeClass3Attack(ItemStack stack) {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt == null) {
+            nbt = new NBTTagCompound();
+            stack.setTagCompound(nbt);
+        }
+
+        float atk = nbt.getFloat(KEY_ATK);
+
+        if (atk < MOD_ATK_CLASS_4) {
+            // Upgrade attack damage
+            float newAtk = atk < MOD_ATK_CLASS_3 ? MOD_ATK_CLASS_3 : MOD_ATK_CLASS_4;
+            nbt.setFloat(KEY_ATK, newAtk);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean upgradeClass3Smite(ItemStack stack) {
+        Map<Enchantment, Integer> mapOld = EnchantmentHelper.getEnchantments(stack);
+        Integer lvlSmite = mapOld.get(enchSmite);
+
+        if (lvlSmite == null || lvlSmite < LVL_SMITE_CLASS_4) {
+            // Upgrade Smite
+            HashMap<Enchantment, Integer> mapNew = new HashMap<>();
+            int newSmiteLvl = (lvlSmite == null || lvlSmite < LVL_SMITE_CLASS_3) ? LVL_SMITE_CLASS_3 : LVL_SMITE_CLASS_4;
+
+            for (Map.Entry<Enchantment, Integer> enchOld : mapOld.entrySet()) {
+                Enchantment key = enchOld.getKey();
+
+                if (key.isCompatibleWith(enchSmite)) {
+                    mapNew.put(key, enchOld.getValue());
+                }
+            }
+
+            mapNew.put(enchSmite, newSmiteLvl);
+            EnchantmentHelper.setEnchantments(mapNew, stack);
+            return true;
+        }
+
+        return false;
+    }
+
     public boolean upgradeClass4(ItemStack stack) {
         NBTTagCompound nbt = stack.getTagCompound();
 
         if (nbt == null) {
             // Upgrade all to Class 4
             stack.addEnchantment(enchSmite, LVL_SMITE_CLASS_4);
-            stack.addEnchantment(enchSweeping, LVL_SWEEPING_CLASS_4);
             nbt = stack.getTagCompound();
             nbt.setFloat(KEY_ATK, MOD_ATK_CLASS_4);
             nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
@@ -386,7 +460,6 @@ public class ItemLaserBlade extends ItemSword {
         boolean isAtkClass4 = false;
         boolean isSpdClass4 = false;
         boolean isSmiteClass4 = false;
-        boolean isSweepingClass4 = false;
 
         // Upgrade Attack to Class 4
         if (nbt.getFloat(KEY_ATK) < MOD_ATK_CLASS_4) {
@@ -405,11 +478,10 @@ public class ItemLaserBlade extends ItemSword {
         // Upgrade Enchantment to Class 4
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
         Integer lvlSmite = map.get(enchSmite);
-        Integer lvlSweeping = map.get(enchSweeping);
 
         // Upgrade Smite to Class 4
         if (lvlSmite == null) {
-            HashMap<Enchantment, Integer> mapNew = new HashMap();
+            HashMap<Enchantment, Integer> mapNew = new HashMap<>();
 
             for (Map.Entry<Enchantment, Integer> entry : map.entrySet()) {
                 Enchantment key = entry.getKey();
@@ -427,14 +499,7 @@ public class ItemLaserBlade extends ItemSword {
             isSmiteClass4 = true;
         }
 
-        // Upgrade Sweeping to Class 4
-        if (lvlSweeping == null || lvlSweeping < LVL_SWEEPING_CLASS_4) {
-            map.put(enchSweeping, LVL_SWEEPING_CLASS_4);
-        } else {
-            isSweepingClass4 = true;
-        }
-
-        if (isAtkClass4 && isSpdClass4 && isSmiteClass4 && isSweepingClass4) {
+        if (isAtkClass4 && isSpdClass4 && isSmiteClass4) {
             return false; // Already Class 4
         }
 
@@ -520,7 +585,7 @@ public class ItemLaserBlade extends ItemSword {
 
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
-        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+        Multimap<String, AttributeModifier> multimap = HashMultimap.create();
 
         if (slot == EntityEquipmentSlot.MAINHAND) {
             float modDamage = 0;
@@ -546,9 +611,7 @@ public class ItemLaserBlade extends ItemSword {
                 setPerformanceClass2(stack);
             }
 
-            multimap.removeAll(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage + modDamage, 0));
-            multimap.removeAll(SharedMonsterAttributes.ATTACK_SPEED.getName());
             multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", attackSpeed + modSpeed, 0));
         }
 
