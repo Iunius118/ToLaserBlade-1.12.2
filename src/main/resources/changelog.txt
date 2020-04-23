@@ -1,6 +1,11 @@
 ToLaserBlade
 Changelog
 
+v1.12.2-1.7.1.0
+
+    Add attack speed upgrade for laser blade
+
+
 v1.12.2-1.7.0.0
 
     Add attack damage and Smite upgrade for laser blade
