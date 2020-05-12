@@ -5,6 +5,7 @@ import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -87,6 +88,7 @@ public class ItemLaserBlade extends ItemSword {
         enchSmite = Enchantment.getEnchantmentByLocation("smite");
 
         addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new DispenseLaserBladeBehavior());
     }
 
     public static NBTTagCompound setPerformance(ItemStack stack, float modSpeed, float modAttack) {
