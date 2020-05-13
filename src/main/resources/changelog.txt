@@ -1,6 +1,11 @@
 ToLaserBlade
 Changelog
 
+v1.12.2-1.7.2.0
+
+    Add laser attack by Laser Blade in dispenser
+
+
 v1.12.2-1.7.1.0
 
     Add attack speed upgrade for laser blade

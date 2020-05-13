@@ -69,7 +69,7 @@ import org.apache.logging.log4j.Logger;
 public class ToLaserBlade {
     public static final String MOD_ID = "tolaserblade";
     public static final String MOD_NAME = "ToLaserBlade";
-    public static final String MOD_VERSION = "1.12.2-1.7.1.0";
+    public static final String MOD_VERSION = "1.12.2-1.7.2.0";
     public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12.2-14.23.3.2655,)";
     public static final String MOD_UPDATE_JSON_URL = "https://raw.githubusercontent.com/Iunius118/ToLaserBlade/master/update.json";
 
