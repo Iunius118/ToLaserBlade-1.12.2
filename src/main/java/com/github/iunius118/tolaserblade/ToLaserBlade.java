@@ -2,6 +2,8 @@ package com.github.iunius118.tolaserblade;
 
 import com.github.iunius118.tolaserblade.client.model.ModelLaserBlade;
 import com.github.iunius118.tolaserblade.client.renderer.ItemLaserBladeRenderer;
+import com.github.iunius118.tolaserblade.client.renderer.LaserTrapEntityRenderer;
+import com.github.iunius118.tolaserblade.entity.LaserTrapEntity;
 import com.github.iunius118.tolaserblade.item.ItemLasarBlade;
 import com.github.iunius118.tolaserblade.item.ItemLaserBlade;
 import com.github.iunius118.tolaserblade.network.ServerConfigMessage;
@@ -36,6 +38,7 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -47,6 +50,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,6 +87,8 @@ public class ToLaserBlade {
     public static final ResourceLocation RL_OBJ_ITEM_LASER_BLADE_1 = new ResourceLocation(MOD_ID, "item/laser_blade_1.obj");
     public static final ResourceLocation RL_TEXTURE_ITEM_LASER_BLADE = new ResourceLocation(MOD_ID, "items/laser_blade");
 
+    public static final String NAME_ENTITY_LASER_TRAP = "laser_trap";
+
     public static boolean hasShownUpdate = false;
 
     public static final ToLaserBladeConfig config = new ToLaserBladeConfig();
@@ -116,6 +123,15 @@ public class ToLaserBlade {
         event.getRegistry().registerAll(
                 new ItemLasarBlade().setRegistryName(NAME_ITEM_LASAR_BLADE).setUnlocalizedName(MOD_ID + "." + NAME_ITEM_LASAR_BLADE),
                 new ItemLaserBlade().setRegistryName(NAME_ITEM_LASER_BLADE).setUnlocalizedName(MOD_ID + "." + NAME_ITEM_LASER_BLADE)
+        );
+    }
+
+    @SubscribeEvent
+    public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
+        int entityID = 0;
+
+        event.getRegistry().registerAll(
+                EntityEntryBuilder.create().entity(LaserTrapEntity.class).id(NAME_ENTITY_LASER_TRAP, entityID++).name(MOD_ID + "." + NAME_ENTITY_LASER_TRAP).tracker(64, 4, false).build()
         );
     }
 
@@ -222,6 +238,9 @@ public class ToLaserBlade {
 
             // Register LaserBlade renderer
             ITEMS.laser_blade.setTileEntityItemStackRenderer(new ItemLaserBladeRenderer());
+
+            // Register laser trap entity renderer
+            RenderingRegistry.registerEntityRenderingHandler(LaserTrapEntity.class, LaserTrapEntityRenderer::new);
         }
 
         @SubscribeEvent

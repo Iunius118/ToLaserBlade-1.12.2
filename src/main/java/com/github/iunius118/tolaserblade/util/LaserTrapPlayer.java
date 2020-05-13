@@ -22,7 +22,7 @@ public class LaserTrapPlayer extends FakePlayer {
     public void initInventory(ItemStack currentStack) {
         inventory.clear();
 
-        // Set given item stack in main hand
+        // Set given item stack on main hand
         inventory.currentItem = 0;
         inventory.setInventorySlotContents(0, currentStack);
 
