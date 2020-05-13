@@ -27,6 +27,12 @@ public class ToLaserBladeConfig {
         @Config.RangeInt(min = 0, max = 128)
         @Config.Name("laserBladeEfficiency")
         public int laserBladeEfficiency = 12;
+
+        // This is not synced with client
+        @Config.Comment("Enable to attack with Laser Blade in Dispenser when the dispenser is activated.")
+        @Config.LangKey("tolaserblade.configgui.enableLaserTrap")
+        @Config.Name("enableLaserTrap")
+        public boolean isEnabledLaserTrap = true;
     }
 
     public static class ClientConfig {
