@@ -1,6 +1,11 @@
 ToLaserBlade
 Changelog
 
+v1.12.2-1.7.2.1
+
+    Fix dispensed laser beam color
+
+
 v1.12.2-1.7.2.0
 
     Add laser attack by Laser Blade in dispenser
