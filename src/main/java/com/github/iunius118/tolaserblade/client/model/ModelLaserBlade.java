@@ -27,7 +27,7 @@ import javax.vecmath.Matrix4f;
 import java.util.*;
 
 public class ModelLaserBlade implements IBakedModel {
-    public IBakedModel bakedJSONModel;
+    public final IBakedModel bakedJSONModel;
 
     public ItemStack itemStack;
     public World world;
@@ -41,9 +41,9 @@ public class ModelLaserBlade implements IBakedModel {
 
     public int renderingMode = 0;
 
-    public Map<String, List<BakedQuad>> mapQuads_0 = new HashMap();
-    public Map<String, List<BakedQuad>> mapQuads_1 = new HashMap();
-    public String[] partNames = {"Hilt", "Hilt_bright", "Blade_core", "Blade_halo_1", "Blade_halo_2"};
+    public final Map<String, List<BakedQuad>> mapQuads_0 = new HashMap<>();
+    public final Map<String, List<BakedQuad>> mapQuads_1 = new HashMap<>();
+    public final String[] partNames = {"Hilt", "Hilt_bright", "Blade_core", "Blade_halo_1", "Blade_halo_2"};
 
     public ModelLaserBlade(IBakedModel bakedOBJModelIn, IBakedModel bakedJSONModelIn) {
         this(bakedOBJModelIn, bakedJSONModelIn, false);
@@ -60,7 +60,7 @@ public class ModelLaserBlade implements IBakedModel {
             // Separate Quads to each parts by OBJ Group.
             for (String partName : partNames) {
                 mapQuads_0.put(partName, getPartQuads(bakedOBJModelIn, ImmutableList.of(partName)));
-                mapQuads_1 = mapQuads_0;
+                mapQuads_1.putAll(mapQuads_0);
             }
         }
     }
