@@ -213,7 +213,7 @@ public class ToLaserBlade {
             super.postInit(event);
 
             // Register item color handler
-            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new ItemLaserBlade.ColorHandler(), ITEMS.laser_blade);
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler(ItemLaserBlade.ColorHandler.INSTANCE, ITEMS.laser_blade);
         }
 
         // ToLaserBladeConfig

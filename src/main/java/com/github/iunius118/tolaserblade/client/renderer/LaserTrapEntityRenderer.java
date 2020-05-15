@@ -38,19 +38,19 @@ public class LaserTrapEntityRenderer extends Render<LaserTrapEntity> {
             laserBoundingBox = laserBoundingBox.grow(-0.4375D, -0.4375D, 0.0D);
         }
 
-        renderLaserTrap(laserBoundingBox, x - entity.lastTickPosX, y - entity.lastTickPosY, z - entity.lastTickPosZ);
+        renderLaserTrap(laserBoundingBox, x - entity.lastTickPosX, y - entity.lastTickPosY, z - entity.lastTickPosZ, entity.getColor());
 
         GlStateManager.popMatrix();
     }
 
-    private void renderLaserTrap(AxisAlignedBB boundingBox, double x, double y, double z) {
+    private void renderLaserTrap(AxisAlignedBB boundingBox, double x, double y, double z, int color) {
         float lastBrightnessX = OpenGlHelper.lastBrightnessX;
         float lastBrightnessY = OpenGlHelper.lastBrightnessY;
 
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
-        GlStateManager.color(1.0F, 0.0F, 0.0F, 1.0F);
+        setColor(color);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -96,6 +96,14 @@ public class LaserTrapEntityRenderer extends Render<LaserTrapEntity> {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
+    }
+
+    private void setColor(int color) {
+        float b = (float)(color & 0xFF) / 0xFF;
+        float g = (float)((color >>> 8) & 0xFF) / 0xFF;
+        float r = (float)((color >>> 16) & 0xFF) / 0xFF;
+        float a = (float)((color >>> 24) & 0xFF) / 0xFF;
+        GlStateManager.color(r, g, b, a);
     }
 
     @Nullable

@@ -39,14 +39,19 @@ public class DispenseLaserBladeBehavior implements IBehaviorDispenseItem {
 
             // Create fake player to attack entities
             LaserTrapPlayer laserTrapPlayer = LaserTrapPlayer.get((WorldServer)world);
+            laserTrapPlayer.setPosition(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
             laserTrapPlayer.initInventory(stack.copy());
             BlockPos targetPos = pos.offset(dir);
 
             // Attack entities
             attackEntitiesInPos(laserTrapPlayer, targetPos);
 
+            // Kill fake player
+            laserTrapPlayer.setDead();
+
             // Spawn laser entity for laser effect
-            LaserTrapEntity laserTrapEntity = new LaserTrapEntity(world, targetPos, dir);
+            int color = ItemLaserBlade.getColorFromNBT(stack, ItemLaserBlade.KEY_COLOR_HALO, ItemLaserBlade.KEY_IS_SUB_COLOR_HALO, ItemLaserBlade.colors[0]);
+            LaserTrapEntity laserTrapEntity = new LaserTrapEntity(world, targetPos, dir, color);
             world.spawnEntity(laserTrapEntity);
         }
 
@@ -54,7 +59,7 @@ public class DispenseLaserBladeBehavior implements IBehaviorDispenseItem {
     }
 
     private void attackEntitiesInPos(LaserTrapPlayer laserTrapPlayer, BlockPos pos) {
-        AxisAlignedBB boundingBox = new AxisAlignedBB(pos);
+        AxisAlignedBB boundingBox = new AxisAlignedBB(pos).grow(0.5D);
         // Get target entities
         List<Entity> targetEntities = laserTrapPlayer.world.getEntitiesInAABBexcluding(null, boundingBox, LASER_TRAP_TARGETS);
         // Get attack damage

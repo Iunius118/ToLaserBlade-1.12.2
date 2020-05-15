@@ -36,6 +36,8 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -72,9 +74,9 @@ public class ItemLaserBlade extends ItemSword {
     public static final int COST_LVL_CLASS_4 = 15;
     public static final int COST_ITEM_CLASS_4 = 1;
 
-    private static final IItemPropertyGetter BLOCKING_GETTER = (stack, world, entity) -> {
-        return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
-    };
+    private static final IItemPropertyGetter BLOCKING_GETTER = (stack, world, entity) -> (
+            entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F
+    );
 
     public ItemLaserBlade() {
         super(ToLaserBlade.MATERIAL_LASER);
@@ -103,6 +105,22 @@ public class ItemLaserBlade extends ItemSword {
         nbt.setFloat(KEY_ATK, modAttack);
 
         return nbt;
+    }
+
+    public static int getColorFromNBT(ItemStack stack, String keyColor, String keyIsSubColor, int defaultColor) {
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt != null && nbt.hasKey(keyColor, NBT.TAG_INT)) {
+            int color = nbt.getInteger(keyColor);
+
+            if (nbt.getBoolean(keyIsSubColor)) {
+                color = ~color | 0xFF000000;
+            }
+
+            return color;
+        }
+
+        return defaultColor;
     }
 
     public static NBTTagCompound setColors(ItemStack stack, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo) {
@@ -574,10 +592,9 @@ public class ItemLaserBlade extends ItemSword {
                 playerIn.setActiveHand(handIn);
             }
 
-            return new ActionResult<>(EnumActionResult.PASS, itemstack);
-        } else {
-            return new ActionResult<>(EnumActionResult.PASS, itemstack);
         }
+
+        return new ActionResult<>(EnumActionResult.PASS, itemstack);
     }
 
     @Override
@@ -650,7 +667,10 @@ public class ItemLaserBlade extends ItemSword {
         return multimap;
     }
 
+    @SideOnly(Side.CLIENT)
     public static class ColorHandler implements IItemColor {
+        public static final ColorHandler INSTANCE = new ColorHandler();
+
         @Override
         public int colorMultiplier(ItemStack stack, int tintIndex) {
             if (ToLaserBladeConfig.client.isEnabledLaserBlade3DModel) {
@@ -659,30 +679,14 @@ public class ItemLaserBlade extends ItemSword {
 
             switch (tintIndex) {
                 case 1:
-                    return getColorFronNBT(stack, KEY_COLOR_HALO, KEY_IS_SUB_COLOR_HALO, colors[0]);
+                    return ItemLaserBlade.getColorFromNBT(stack, KEY_COLOR_HALO, KEY_IS_SUB_COLOR_HALO, colors[0]);
 
                 case 2:
-                    return getColorFronNBT(stack, KEY_COLOR_CORE, KEY_IS_SUB_COLOR_CORE, 0xFFFFFFFF);
+                    return ItemLaserBlade.getColorFromNBT(stack, KEY_COLOR_CORE, KEY_IS_SUB_COLOR_CORE, 0xFFFFFFFF);
 
                 default:
                     return 0xFFFFFFFF;
             }
-        }
-
-        public int getColorFronNBT(ItemStack stack, String keyColor, String keyIsSubColor, int defaultColor) {
-            NBTTagCompound nbt = stack.getTagCompound();
-
-            if (nbt != null && nbt.hasKey(keyColor, NBT.TAG_INT)) {
-                int color = nbt.getInteger(keyColor);
-
-                if (nbt.getBoolean(keyIsSubColor)) {
-                    color = ~color | 0xFF000000;
-                }
-
-                return color;
-            }
-
-            return defaultColor;
         }
     }
 }
