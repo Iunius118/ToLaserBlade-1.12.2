@@ -50,6 +50,7 @@ public class ItemLaserBlade extends ItemSword {
     private final float attackSpeed;
     // Blade color table
     public final static int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202, 0xFFA00080};
+    public final static int[] dyeColors = {0xFFFFFFFF, 0xFFFF681F, 0xFFFF0080, 0xFF00AAFF, 0xFFFFEE00, 0xFFA9FF32, 0xFFFF004C, 0xFF555555, 0xFFAAAAAA, 0xFF00FFFF, 0xFFFF00FF, 0xFF0000FF, 0xFFFF6B00, 0xFF80FF00, 0xFFFF0000, 0xFF020202};
 
     public final Enchantment enchSmite;
 
@@ -236,7 +237,7 @@ public class ItemLaserBlade extends ItemSword {
         Item item = stack.getItem();
 
         if (item instanceof ItemDye) {
-            int color = EnumDyeColor.byDyeDamage(stack.getItemDamage()).getColorValue() | 0xFF000000;
+            int color = dyeColors[0xF - (stack.getItemDamage() & 0xF)] | 0xFF000000;
 
             if (nbt.hasKey(KEY_COLOR_CORE, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_CORE) == color) {
                 return false;
@@ -246,7 +247,7 @@ public class ItemLaserBlade extends ItemSword {
 
             return true;
         } else if (item instanceof ItemBlock && ((ItemBlock) item).getBlock() instanceof BlockStainedGlass) {
-            int color = EnumDyeColor.byMetadata(stack.getMetadata()).getColorValue() | 0xFF000000;
+            int color = dyeColors[stack.getMetadata() & 0xF] | 0xFF000000;
 
             if (nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_HALO) == color) {
                 return false;
