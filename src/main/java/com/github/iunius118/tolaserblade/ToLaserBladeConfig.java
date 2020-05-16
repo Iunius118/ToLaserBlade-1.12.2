@@ -33,6 +33,12 @@ public class ToLaserBladeConfig {
         @Config.LangKey("tolaserblade.configgui.enableLaserTrap")
         @Config.Name("enableLaserTrap")
         public boolean isEnabledLaserTrap = true;
+
+        // This is not synced with client
+        @Config.Comment("A boolean value represents whether laser trap can attack player or not.")
+        @Config.LangKey("tolaserblade.configgui.canLaserTrapAttackPlayer")
+        @Config.Name("canLaserTrapAttackPlayer")
+        public boolean canLaserTrapAttackPlayer = false;
     }
 
     public static class ClientConfig {

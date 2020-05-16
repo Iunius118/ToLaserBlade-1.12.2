@@ -15,6 +15,8 @@ tolaserblade.configgui.laserBladeEfficiency.tooltip=レーザーブレイドの�
 tolaserblade.configgui.laserBladeEfficiency=レーザーブレイドの採掘速度
 tolaserblade.configgui.enableLaserTrap.tooltip=ディスペンサーでレーザーブレイドを射出する代わりにレーザーで攻撃するかどうか（trueで有効）。
 tolaserblade.configgui.enableLaserTrap=レーザートラップを有効にする
+tolaserblade.configgui.canLaserTrapAttackPlayer.tooltip=レーザートラップがプレイヤーへ攻撃可能かどうか（trueで可能）。
+tolaserblade.configgui.canLaserTrapAttackPlayer=レーザートラップがプレイヤーへ攻撃可能か
 
 tolaserblade.configgui.enableLaserBlade3DModel.tooltip=レーザーブレイドを3Dモデルで描画するかどうか（trueで有効）。
 tolaserblade.configgui.enableLaserBlade3DModel=レーザーブレイドを3Dモデルで描画する

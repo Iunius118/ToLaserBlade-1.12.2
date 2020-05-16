@@ -15,6 +15,8 @@ tolaserblade.configgui.laserBladeEfficiency.tooltip=An integer value that is a f
 tolaserblade.configgui.laserBladeEfficiency=Laser Blade Mining Speed
 tolaserblade.configgui.enableLaserTrap.tooltip=Enable to attack with Laser Blade in Dispenser when the dispenser is activated.
 tolaserblade.configgui.enableLaserTrap=Enable Laser Trap
+tolaserblade.configgui.canLaserTrapAttackPlayer.tooltip=A boolean value represents whether laser trap can attack player or not.
+tolaserblade.configgui.canLaserTrapAttackPlayer=Can Laser Trap Attack Player
 
 tolaserblade.configgui.enableLaserBlade3DModel.tooltip=Enable Laser Blade to use 3D model.
 tolaserblade.configgui.enableLaserBlade3DModel=Enable Laser Blade 3D Model

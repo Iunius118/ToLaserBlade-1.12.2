@@ -10,6 +10,7 @@ import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntitySelectors;
@@ -21,9 +22,13 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
-
 public class DispenseLaserBladeBehavior implements IBehaviorDispenseItem {
-    public static final Predicate<Entity> LASER_TRAP_TARGETS = Predicates.and(EntitySelectors.NOT_SPECTATING, EntitySelectors.IS_ALIVE, Entity::canBeCollidedWith);
+    public static final Predicate<Entity> LASER_TRAP_TARGETS =
+            Predicates.and(EntitySelectors.NOT_SPECTATING,
+                    EntitySelectors.IS_ALIVE,
+                    Entity::canBeCollidedWith,
+                    Entity::canBeCollidedWith,
+                    entity -> ToLaserBladeConfig.common.canLaserTrapAttackPlayer || !(entity instanceof EntityPlayer));
 
     @Override
     public ItemStack dispense(IBlockSource source, ItemStack stack) {
