@@ -1,6 +1,12 @@
 ToLaserBlade
 Changelog
 
+v1.12.2-1.7.3.0
+
+    Add setting for whether laser beam can attack player
+    Fix changing color of laser blade in multiplayer mode
+
+
 v1.12.2-1.7.2.1
 
     Fix dispensed laser beam color
