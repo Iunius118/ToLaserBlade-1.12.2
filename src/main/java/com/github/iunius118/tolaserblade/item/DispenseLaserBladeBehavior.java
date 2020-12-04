@@ -27,7 +27,6 @@ public class DispenseLaserBladeBehavior implements IBehaviorDispenseItem {
             Predicates.and(EntitySelectors.NOT_SPECTATING,
                     EntitySelectors.IS_ALIVE,
                     Entity::canBeCollidedWith,
-                    Entity::canBeCollidedWith,
                     entity -> ToLaserBladeConfig.common.canLaserTrapAttackPlayer || !(entity instanceof EntityPlayer));
 
     @Override
