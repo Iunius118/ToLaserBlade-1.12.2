@@ -17,6 +17,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
@@ -52,8 +53,6 @@ public class ItemLaserBlade extends ItemSword {
     public final static int[] colors = {0xFFFF0000, 0xFFD0A000, 0xFF00E000, 0xFF0080FF, 0xFF0000FF, 0xFFA000FF, 0xFFFFFFFF, 0xFF020202, 0xFFA00080};
     public final static int[] dyeColors = {0xFFFFFFFF, 0xFFFF681F, 0xFFFF0080, 0xFF00AAFF, 0xFFFFEE00, 0xFFA9FF32, 0xFFFF004C, 0xFF555555, 0xFFAAAAAA, 0xFF00FFFF, 0xFFFF00FF, 0xFF0000FF, 0xFFFF6B00, 0xFF80FF00, 0xFFFF0000, 0xFF020202};
 
-    public final Enchantment enchSmite;
-
     public static final String KEY_ATK = "ATK";
     public static final String KEY_SPD = "SPD";
     public static final String KEY_COLOR_CORE = "colorC";
@@ -87,8 +86,6 @@ public class ItemLaserBlade extends ItemSword {
         material = ToLaserBlade.MATERIAL_LASER;
         attackDamage = 3.0F + material.getAttackDamage();
         attackSpeed = -1.2F;
-
-        enchSmite = Enchantment.getEnchantmentByLocation("smite");
 
         addPropertyOverride(new ResourceLocation("blocking"), BLOCKING_GETTER);
         BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, new DispenseLaserBladeBehavior());
@@ -347,6 +344,39 @@ public class ItemLaserBlade extends ItemSword {
 
                 return;
             }
+        } else if (right.getItem() == Items.BLAZE_ROD) {
+            // Increase Fire Aspect
+            if (upgradeEnchantment(output, Enchantments.FIRE_ASPECT)) {
+                changeDisplayNameOnAnvil(left, output, name);
+
+                event.setCost(COST_LVL_CLASS_3_5);
+                event.setMaterialCost(COST_ITEM_CLASS_4);
+                event.setOutput(output);
+
+                return;
+            }
+        } else if (right.getItem() == Items.ENDER_EYE) {
+            // Increase Sweeping Edge
+            if (upgradeEnchantment(output, Enchantments.SWEEPING)) {
+                changeDisplayNameOnAnvil(left, output, name);
+
+                event.setCost(COST_LVL_CLASS_3_5);
+                event.setMaterialCost(COST_ITEM_CLASS_4);
+                event.setOutput(output);
+
+                return;
+            }
+        } else if (right.getItem() == Items.PRISMARINE_CRYSTALS) {
+                // Add Silk Touch
+                if (upgradeEnchantment(output, Enchantments.SILK_TOUCH)) {
+                    changeDisplayNameOnAnvil(left, output, name);
+
+                    event.setCost(COST_LVL_CLASS_3_5);
+                    event.setMaterialCost(COST_ITEM_CLASS_4);
+                    event.setOutput(output);
+
+                    return;
+                }
         } else if (right.getItem() instanceof ItemBlock) {
             // With block
             Block block = ((ItemBlock)right.getItem()).getBlock();
@@ -376,6 +406,17 @@ public class ItemLaserBlade extends ItemSword {
             } else if (block == Blocks.GLOWSTONE) {
                 // Increase Smite
                 if (upgradeClass3Smite(output)) {
+                    changeDisplayNameOnAnvil(left, output, name);
+
+                    event.setCost(COST_LVL_CLASS_3_5);
+                    event.setMaterialCost(COST_ITEM_CLASS_4);
+                    event.setOutput(output);
+
+                    return;
+                }
+            } else if (block == Blocks.EMERALD_BLOCK) {
+                // Increase Looting
+                if (upgradeEnchantment(output, Enchantments.LOOTING)) {
                     changeDisplayNameOnAnvil(left, output, name);
 
                     event.setCost(COST_LVL_CLASS_3_5);
@@ -472,7 +513,7 @@ public class ItemLaserBlade extends ItemSword {
 
     public boolean upgradeClass3Smite(ItemStack stack) {
         Map<Enchantment, Integer> mapOld = EnchantmentHelper.getEnchantments(stack);
-        Integer lvlSmite = mapOld.get(enchSmite);
+        Integer lvlSmite = mapOld.get(Enchantments.SMITE);
 
         if (lvlSmite == null || lvlSmite < LVL_SMITE_CLASS_4) {
             // Upgrade Smite
@@ -482,12 +523,12 @@ public class ItemLaserBlade extends ItemSword {
             for (Map.Entry<Enchantment, Integer> enchOld : mapOld.entrySet()) {
                 Enchantment key = enchOld.getKey();
 
-                if (key.isCompatibleWith(enchSmite)) {
+                if (key.isCompatibleWith(Enchantments.SMITE)) {
                     mapNew.put(key, enchOld.getValue());
                 }
             }
 
-            mapNew.put(enchSmite, newSmiteLvl);
+            mapNew.put(Enchantments.SMITE, newSmiteLvl);
             EnchantmentHelper.setEnchantments(mapNew, stack);
             return true;
         }
@@ -500,7 +541,7 @@ public class ItemLaserBlade extends ItemSword {
 
         if (nbt == null) {
             // Upgrade all to Class 4
-            stack.addEnchantment(enchSmite, LVL_SMITE_CLASS_4);
+            stack.addEnchantment(Enchantments.SMITE, LVL_SMITE_CLASS_4);
             nbt = stack.getTagCompound();
             nbt.setFloat(KEY_ATK, MOD_ATK_CLASS_4);
             nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
@@ -528,7 +569,7 @@ public class ItemLaserBlade extends ItemSword {
 
         // Upgrade Enchantment to Class 4
         Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(stack);
-        Integer lvlSmite = map.get(enchSmite);
+        Integer lvlSmite = map.get(Enchantments.SMITE);
 
         // Upgrade Smite to Class 4
         if (lvlSmite == null) {
@@ -537,15 +578,15 @@ public class ItemLaserBlade extends ItemSword {
             for (Map.Entry<Enchantment, Integer> entry : map.entrySet()) {
                 Enchantment key = entry.getKey();
 
-                if (key.isCompatibleWith(enchSmite)) {
+                if (key.isCompatibleWith(Enchantments.SMITE)) {
                     mapNew.put(key, entry.getValue());
                 }
             }
 
             map = mapNew;
-            map.put(enchSmite, LVL_SMITE_CLASS_4);
+            map.put(Enchantments.SMITE, LVL_SMITE_CLASS_4);
         } else if (lvlSmite < LVL_SMITE_CLASS_4) {
-            map.put(enchSmite, LVL_SMITE_CLASS_4);
+            map.put(Enchantments.SMITE, LVL_SMITE_CLASS_4);
         } else {
             isSmiteClass4 = true;
         }
@@ -557,6 +598,35 @@ public class ItemLaserBlade extends ItemSword {
         EnchantmentHelper.setEnchantments(map, stack);
 
         return true;
+    }
+
+    private boolean isCompatibleWith(Enchantment e1, Enchantment e2) {
+        return e1.isCompatibleWith(e2) || e1.equals(e2) ||
+                (e1 == Enchantments.SILK_TOUCH && e2 == Enchantments.LOOTING) || (e1 == Enchantments.LOOTING && e2 == Enchantments.SILK_TOUCH); // Allow Laser Blade to have Silk Touch and Looting together
+    }
+
+    public boolean upgradeEnchantment(ItemStack stack, Enchantment enchantment) {
+        Map<Enchantment, Integer> mapOld = EnchantmentHelper.getEnchantments(stack);
+        Integer lvl = mapOld.get(enchantment);
+        int maxLvl = enchantment.getMaxLevel();
+
+        if (lvl == null || lvl < maxLvl) {
+            // Upgrade Smite
+            HashMap<Enchantment, Integer> mapNew = new HashMap<>();
+            for (Map.Entry<Enchantment, Integer> enchOld : mapOld.entrySet()) {
+                Enchantment key = enchOld.getKey();
+
+                if (isCompatibleWith(key, enchantment)) {
+                    mapNew.put(key, enchOld.getValue());
+                }
+            }
+
+            mapNew.put(enchantment, maxLvl);
+            EnchantmentHelper.setEnchantments(mapNew, stack);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -645,7 +715,7 @@ public class ItemLaserBlade extends ItemSword {
             if (nbt != null) {
                 // Fix attack speed for old version
                 if (!nbt.hasKey(KEY_SPD)) {
-                    if (EnchantmentHelper.getEnchantmentLevel(enchSmite, stack) >= LVL_SMITE_CLASS_4) {
+                    if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SMITE, stack) >= LVL_SMITE_CLASS_4) {
                         nbt.setFloat(KEY_SPD, MOD_SPD_CLASS_3);
                     } else {
                         nbt.setFloat(KEY_SPD, 0);
