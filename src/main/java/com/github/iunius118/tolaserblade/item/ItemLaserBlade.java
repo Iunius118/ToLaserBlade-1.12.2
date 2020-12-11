@@ -5,6 +5,7 @@ import com.github.iunius118.tolaserblade.ToLaserBladeConfig;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCarpet;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
@@ -55,6 +56,7 @@ public class ItemLaserBlade extends ItemSword {
 
     public static final String KEY_ATK = "ATK";
     public static final String KEY_SPD = "SPD";
+    public static final String KEY_COLOR_GRIP = "colorG";
     public static final String KEY_COLOR_CORE = "colorC";
     public static final String KEY_COLOR_HALO = "colorH";
     public static final String KEY_IS_SUB_COLOR_CORE = "isSubC";
@@ -111,7 +113,7 @@ public class ItemLaserBlade extends ItemSword {
         if (nbt != null && nbt.hasKey(keyColor, NBT.TAG_INT)) {
             int color = nbt.getInteger(keyColor);
 
-            if (nbt.getBoolean(keyIsSubColor)) {
+            if (keyIsSubColor != null && nbt.getBoolean(keyIsSubColor)) {
                 color = ~color | 0xFF000000;
             }
 
@@ -121,7 +123,7 @@ public class ItemLaserBlade extends ItemSword {
         return defaultColor;
     }
 
-    public static NBTTagCompound setColors(ItemStack stack, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo) {
+    public static NBTTagCompound setColors(ItemStack stack, int colorGrip, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo) {
         NBTTagCompound nbt = stack.getTagCompound();
 
         if (nbt == null) {
@@ -129,6 +131,7 @@ public class ItemLaserBlade extends ItemSword {
             stack.setTagCompound(nbt);
         }
 
+        nbt.setInteger(KEY_COLOR_GRIP, colorGrip);
         nbt.setInteger(KEY_COLOR_CORE, colorCore);
         nbt.setInteger(KEY_COLOR_HALO, colorHalo);
         nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, isSubColorCore);
@@ -137,7 +140,7 @@ public class ItemLaserBlade extends ItemSword {
         return nbt;
     }
 
-    public static boolean checkColors(ItemStack stack, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo) {
+    public static boolean checkColors(ItemStack stack, int colorGrip, int colorCore, int colorHalo, boolean isSubColorCore, boolean isSubColorHalo) {
         NBTTagCompound nbt = stack.getTagCompound();
 
         if (nbt == null) {
@@ -145,22 +148,34 @@ public class ItemLaserBlade extends ItemSword {
             stack.setTagCompound(nbt);
         }
 
+        // Grip color
+        if (!nbt.hasKey(KEY_COLOR_GRIP, NBT.TAG_INT)) {
+            nbt.setInteger(KEY_COLOR_GRIP, 0xFFFFFFFF); // Default color is white
+        }
+
+        if (colorGrip != nbt.getInteger(KEY_COLOR_GRIP)) {
+            return false;
+        }
+
+        // Inner color of blade
         if (!nbt.hasKey(KEY_COLOR_CORE, NBT.TAG_INT)) {
-            nbt.setInteger(KEY_COLOR_CORE, 0xFFFFFFFF);
+            nbt.setInteger(KEY_COLOR_CORE, 0xFFFFFFFF); // Default color is white
         }
 
         if (colorCore != nbt.getInteger(KEY_COLOR_CORE)) {
             return false;
         }
 
+        // Outer color of blade
         if (!nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT)) {
-            nbt.setInteger(KEY_COLOR_HALO, colors[0]);
+            nbt.setInteger(KEY_COLOR_HALO, colors[0]); // Default color is red
         }
 
         if (colorHalo != nbt.getInteger(KEY_COLOR_HALO)) {
             return false;
         }
 
+        // Sub color flags
         if (!nbt.hasKey(KEY_IS_SUB_COLOR_CORE)) {
             nbt.setBoolean(KEY_IS_SUB_COLOR_CORE, false);
         }
@@ -179,20 +194,20 @@ public class ItemLaserBlade extends ItemSword {
 
     public static NBTTagCompound setPerformanceClass1(ItemStack stack, int colorHalo) {
         setPerformance(stack, 0, MOD_ATK_CLASS_1);
-        return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
+        return setColors(stack, 0xFFFFFFFF, 0xFFFFFFFF, colorHalo, false, false);
     }
 
     public static NBTTagCompound setPerformanceClass2(ItemStack stack) {
         setPerformance(stack, 0, 0);
-        return setColors(stack, 0xFFFFFFFF, colors[0], false, false);
+        return setColors(stack, 0xFFFFFFFF, 0xFFFFFFFF, colors[0], false, false);
     }
 
     public static NBTTagCompound setPerformanceClass3(ItemStack stack, int colorHalo) {
         stack.addEnchantment(Enchantment.getEnchantmentByLocation("smite"), 5);
         NBTTagCompound nbt = setPerformance(stack, MOD_SPD_CLASS_3, MOD_ATK_CLASS_3);
 
-        if (checkColors(stack, 0xFFFFFFFF, colors[0], false, false)) {
-            return setColors(stack, 0xFFFFFFFF, colorHalo, false, false);
+        if (checkColors(stack, 0xFFFFFFFF, 0xFFFFFFFF, colors[0], false, false)) {
+            return setColors(stack, 0xFFFFFFFF, 0xFFFFFFFF, colorHalo, false, false);
         }
 
         return nbt;
@@ -214,7 +229,7 @@ public class ItemLaserBlade extends ItemSword {
         NBTTagCompound nbt = stackOut.getTagCompound();
 
         if (nbt == null) {
-            nbt = setColors(stackOut, 0xFFFFFFFF, colors[0], false, false);
+            nbt = setColors(stackOut, 0xFFFFFFFF, 0xFFFFFFFF, colors[0], false, false);
         }
 
         if (nbt.hasKey(KEY_IS_CRAFTING)) {
@@ -234,6 +249,7 @@ public class ItemLaserBlade extends ItemSword {
         Item item = stack.getItem();
 
         if (item instanceof ItemDye) {
+            // Inner color of blade
             int color = dyeColors[0xF - (stack.getItemDamage() & 0xF)] | 0xFF000000;
 
             if (nbt.hasKey(KEY_COLOR_CORE, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_CORE) == color) {
@@ -243,16 +259,33 @@ public class ItemLaserBlade extends ItemSword {
             nbt.setInteger(KEY_COLOR_CORE, color);
 
             return true;
-        } else if (item instanceof ItemBlock && ((ItemBlock) item).getBlock() instanceof BlockStainedGlass) {
-            int color = dyeColors[stack.getMetadata() & 0xF] | 0xFF000000;
+        } else if (item instanceof ItemBlock) {
+            // With block
+            Block block = ((ItemBlock) item).getBlock();
 
-            if (nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_HALO) == color) {
-                return false;
+            if (block instanceof BlockCarpet) {
+                // Grip color
+                int color = dyeColors[stack.getMetadata() & 0xF] | 0xFF000000;
+
+                if (nbt.hasKey(KEY_COLOR_GRIP, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_GRIP) == color) {
+                    return false;
+                }
+
+                nbt.setInteger(KEY_COLOR_GRIP, color);
+
+                return true;
+            } else if (block instanceof BlockStainedGlass) {
+                // Outer color of blade
+                int color = dyeColors[stack.getMetadata() & 0xF] | 0xFF000000;
+
+                if (nbt.hasKey(KEY_COLOR_HALO, NBT.TAG_INT) && nbt.getInteger(KEY_COLOR_HALO) == color) {
+                    return false;
+                }
+
+                nbt.setInteger(KEY_COLOR_HALO, color);
+
+                return true;
             }
-
-            nbt.setInteger(KEY_COLOR_HALO, color);
-
-            return true;
         }
 
         return false;
@@ -721,7 +754,7 @@ public class ItemLaserBlade extends ItemSword {
                         nbt.setFloat(KEY_SPD, 0);
                     }
 
-                    checkColors(stack, 0xFFFFFFFF, colors[0], false, false);
+                    checkColors(stack, 0xFFFFFFFF, 0xFFFFFFFF, colors[0], false, false);
                 }
 
                 // Get attack modifiers from NBT
@@ -749,6 +782,9 @@ public class ItemLaserBlade extends ItemSword {
             }
 
             switch (tintIndex) {
+                case 0:
+                    return ItemLaserBlade.getColorFromNBT(stack, KEY_COLOR_GRIP, null, 0xFFFFFFFF);
+
                 case 1:
                     return ItemLaserBlade.getColorFromNBT(stack, KEY_COLOR_HALO, KEY_IS_SUB_COLOR_HALO, colors[0]);
 

@@ -46,16 +46,21 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
 
     public void doRender(ModelLaserBlade model) {
         float partialTicks = Animation.getPartialTickTime();
-
         BufferBuilder renderer = Tessellator.getInstance().getBuffer();
+        NBTTagCompound nbt = model.itemStack.getTagCompound();
+
+        int colorGrip = 0xFFFFFFFF;
         int colorCore = 0xFFFFFFFF;
         int colorHalo = 0xFFFF0000;
         boolean isSubColorCore = false;
         boolean isSubColorHalo = false;
-        NBTTagCompound nbt = model.itemStack.getTagCompound();
 
         // Load blade colors from ItemStack NBT.
         if (nbt != null) {
+            if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_GRIP, NBT.TAG_INT)) {
+                colorGrip = nbt.getInteger(ItemLaserBlade.KEY_COLOR_GRIP);
+            }
+
             if (nbt.hasKey(ItemLaserBlade.KEY_COLOR_CORE, NBT.TAG_INT)) {
                 colorCore = nbt.getInteger(ItemLaserBlade.KEY_COLOR_CORE);
             }
@@ -95,7 +100,7 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
         model.renderingMode = ToLaserBladeConfig.client.laserBladeRenderingMode;
 
         // Draw hilt.
-        renderQuads(renderer, model.getQuadsByName("Hilt"), -1);
+        renderQuads(renderer, model.getQuadsByName("Hilt"), colorGrip);
 
         // Enable bright rendering.
         GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
