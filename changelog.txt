@@ -1,6 +1,12 @@
 ToLaserBlade
 Changelog
 
+v1.12.2-1.7.6.0
+
+    Require Forge 1.12.2-14.23.5.2859
+    Switch license to MIT
+    Improve laser blade model
+
 v1.12.2-1.7.5.0
 
     Add grip color modification to Laser Blade
