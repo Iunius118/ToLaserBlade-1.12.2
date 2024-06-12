@@ -136,26 +136,26 @@ public class ItemLaserBladeRenderer extends TileEntityItemStackRenderer {
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
             GL14.glBlendEquation(GL14.GL_FUNC_ADD);
 
-            // Draw blade core.
-            if (isSubColorCore) {
+            // Draw blade halo.
+            if (isSubColorHalo) {
                 // Draw core with Sub-color.
                 GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
             }
 
-            renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
 
-            // Draw blade halo.
-            if (!isSubColorCore && isSubColorHalo) {
+            // Draw blade core.
+            if (isSubColorCore && !isSubColorHalo) {
                 // Draw halo with Sub-color.
                 GL14.glBlendEquation(GL14.GL_FUNC_REVERSE_SUBTRACT);
-            } else if (isSubColorCore && !isSubColorHalo) {
+            } else if (isSubColorHalo && !isSubColorCore) {
                 GL14.glBlendEquation(GL14.GL_FUNC_ADD);
             }
 
-            renderQuads(renderer, model.getQuadsByName("Blade_halo_1"), colorHalo);
-            renderQuads(renderer, model.getQuadsByName("Blade_halo_2"), colorHalo);
+            renderQuads(renderer, model.getQuadsByName("Blade_core"), colorCore);
 
-            if (isSubColorHalo) {
+            if (isSubColorCore) {
                 GL14.glBlendEquation(GL14.GL_FUNC_ADD);
             }
 
