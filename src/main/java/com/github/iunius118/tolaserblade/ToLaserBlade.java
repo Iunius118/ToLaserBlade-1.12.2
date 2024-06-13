@@ -71,7 +71,7 @@ public class ToLaserBlade {
     public static final String MOD_NAME = "ToLaserBlade";
     public static final String MOD_VERSION = "1.12.2-1.7.6.0";
     public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12.2-14.23.5.2859,)";
-    public static final String MOD_UPDATE_JSON_URL = "https://raw.githubusercontent.com/Iunius118/ToLaserBlade/master/update.json";
+    public static final String MOD_UPDATE_JSON_URL = "https://raw.githubusercontent.com/Iunius118/ToLaserBlade/main/update.json";
 
     public static Logger logger;
 
