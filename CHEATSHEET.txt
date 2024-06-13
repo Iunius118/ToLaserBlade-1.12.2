@@ -1,0 +1,159 @@
+# Cheatsheet
+
+[ToLaserBlade](https://github.com/Iunius118/ToLaserBlade)
+Version 1.12.2-1.7.6.0.
+
+Adds a simple sword with a laser blade.
+
+## Requirements
+
+- Minecraft 1.12.2
+- Forge 1.12.2-14.23.5.2859
+
+## How to Get Started
+
+1. Craft a laser blade
+2. Craft an anvil
+3. Upgrade the laser blade on the anvil
+
+## Items
+
+### Laser B1ade (Prop Laser Blade)
+
+Crafting Recipe:
+
+    2 Redstone Torches (R) and Stick (s)
+    |   | R |   |
+    |   | R |   |
+    |   | s |   |
+
+Performances:
+
+- Attack Damage : 5
+- Attack Speed  : 2.8
+- Max Durability: 255
+
+When sneaking and right-clicking on a block, a redstone torch is placed on the block and the laser b1ade's durability is consumed.
+When right-clicking on a redstone torch, the redstone torch is broken and the laser b1ade's durability is recovered.
+
+### Laser Blade
+
+Laser Blade can be used to dig or mine for dirt, gravel, stone, diamond, obsidian, etc.
+
+#### Low Cost Recipe
+
+Crafting Recipe:
+
+    4 Iron Ingots (i), Diamond (d), Glass or Stained Glass (#), and Redstone (r)
+    |   | i | d |
+    | i | # | i |
+    | r | i |   |
+
+Performances:
+
+- Attack Damage: 6
+- Attack Speed : 2.8
+
+#### Medium Cost Recipe
+
+Crafting Recipe:
+
+    4 Iron Ingots (i), Diamond (d), Glowstone Dust (g), and Redstone (r)
+    |   | i | d |
+    | i | g | i |
+    | r | i |   |
+
+Performances:
+
+- Attack Damage: 7
+- Attack Speed : 2.8
+
+#### High Cost Recipes
+
+Crafting Recipe:
+
+    4 Iron Ingots (i), Block of Diamond (D), Glowstone (G), and Block of Redstone (R)
+    |   | i | D |
+    | i | G | i |
+    | R | i |   |
+
+Performances:
+
+- Attack Damage: 10
+- Attack Speed : 4
+- Enchantment  : Smite V
+
+#### Upgrading Laser Blade
+
+Anvil Recipes:
+
+- Rename unenchanted Laser Blade to GIFT → 4 attack speed, 10 attack damage, and Smite V
+- Laser Blade + Block of Redstone → + attack speed (up to 4.0)
+- Laser Blade + Block of Diamond → + attack damage (up to 14)
+- Laser Blade + Glowstone → + Smite (up to X)
+- Laser Blade + Nether Star → 4 attack speed, 14 attack damage, and Smite X
+- Laser Blade + Blaze Rod → + Fire Aspect
+- Laser Blade + Eye of Ender → + Sweeping Edge
+- Laser Blade + Block of Emerald → + Looting
+- Laser Blade + Prismarine Crystals → + Silk Touch
+- Laser Blade (14+ attack damage) + Mob Head → + attack damage
+
+#### Coloring Laser Blade
+
+Anvil Recipes:
+
+- Laser Blade + dye item → changing color of inner part of blade
+- Laser Blade + stained glass → changing color of outer part of blade
+- Laser Blade + carpet → changing grip color
+
+#### Laser Trap
+
+When a laser blade is set in a dispenser and activated, it can attack mobs in front of the dispenser with the laser blade.
+This attack is only affected by the laser blade's attack damage and the Looting enchantment.
+
+## Configuration
+
+The configuration is saved in file `config/tolaserblade.cfg`.
+
+    # Configuration file
+
+    ##########################################################################################################
+    # client
+    #--------------------------------------------------------------------------------------------------------#
+    # Client-side settings.
+    ##########################################################################################################
+
+    client {
+        # Enable Laser Blade to use 3D Model (true: using OBJ model, false: using JSON model).
+        B:enableLaserBlade3DModel=true
+
+        # Select rendering mode of Laser Blade (0: default, 1: using only alpha blending).
+        # This option is available when enableLaserBlade3DModel is true.
+        # Min: 0
+        # Max: 1
+        I:laserBladeRenderingMode=0
+    }
+
+
+    ##########################################################################################################
+    # common
+    #--------------------------------------------------------------------------------------------------------#
+    # Common settings. If you are playing a multiplayer game, the server-side settings will be used.
+    ##########################################################################################################
+
+    common {
+        # A boolean value represents whether laser trap can attack player or not.
+        # This option is available when enableLaserTrap is true.
+        B:canLaserTrapAttackPlayer=false
+
+        # Enable blocking with Laser Blade.
+        B:enableBlockingWithLaserBlade=false
+
+        # Enable to attack with Laser Blade in Dispenser when the dispenser is activated.
+        B:enableLaserTrap=true
+
+        # An integer value that is a factor of mining speed of Laser Blade.
+        # Min: 0
+        # Max: 128
+        I:laserBladeEfficiency=12
+    }
