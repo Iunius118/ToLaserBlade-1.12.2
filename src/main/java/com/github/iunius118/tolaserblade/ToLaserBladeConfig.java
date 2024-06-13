@@ -35,19 +35,19 @@ public class ToLaserBladeConfig {
         public boolean isEnabledLaserTrap = true;
 
         // This is not synced with client
-        @Config.Comment("A boolean value represents whether laser trap can attack player or not.")
+        @Config.Comment("A boolean value represents whether laser trap can attack player or not.\nThis option is available when enableLaserTrap is true.")
         @Config.LangKey("tolaserblade.configgui.canLaserTrapAttackPlayer")
         @Config.Name("canLaserTrapAttackPlayer")
         public boolean canLaserTrapAttackPlayer = false;
     }
 
     public static class ClientConfig {
-        @Config.Comment("Enable Laser Blade to use 3D Model.")
+        @Config.Comment("Enable Laser Blade to use 3D Model (true: using OBJ model, false: using JSON model).")
         @Config.LangKey("tolaserblade.configgui.enableLaserBlade3DModel")
         @Config.Name("enableLaserBlade3DModel")
         public boolean isEnabledLaserBlade3DModel = true;
 
-        @Config.Comment("Select rendering mode of Laser Blade (0: Default, 1: Using only alpha blending). This option is available when enableLaserBlade3DModel is true.")
+        @Config.Comment("Select rendering mode of Laser Blade (0: default, 1: using only alpha blending).\nThis option is available when enableLaserBlade3DModel is true.")
         @Config.LangKey("tolaserblade.configgui.laserBladeRenderingMode")
         @Config.RangeInt(min = 0, max = 1)
         @Config.Name("laserBladeRenderingMode")
