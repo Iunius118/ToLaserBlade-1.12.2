@@ -106,6 +106,12 @@ Anvil Recipes:
 - Laser Blade + stained glass → changing color of outer part of blade
 - Laser Blade + carpet → changing grip color
 
+Crafting Recipe (Shapeless):
+
+- The player in the Nether, Laser Blade → switching blend mode of inner part of blade
+- The player in the End, Laser Blade → switching blend mode of outer part of blade
+- The player in the other world, Laser Blade → changing color of outer part of blade by the base temperature of the biome
+
 #### Laser Trap
 
 When a laser blade is set in a dispenser and activated, it can attack mobs in front of the dispenser with the laser blade.
