@@ -1,7 +1,7 @@
 # Cheatsheet
 
 [ToLaserBlade](https://github.com/Iunius118/ToLaserBlade)
-Version 1.12.2-1.7.6.0.
+Version 1.12.2-1.7.6.1.
 
 Adds a simple sword with a laser blade.
 
